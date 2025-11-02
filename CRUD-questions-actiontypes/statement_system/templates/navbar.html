@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Student Actiontype - Statement</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl7/1L_dstPt3HV5HzF6Gvk/e3s4Wz6iJgD/+ub2oU" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Navbar Styles */
+        .navbar {
+            background-color: #0f1531;
+            border-bottom: 3px solid #2c3e50;
+            border-radius: 0;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        body {
+            padding-top: 70px; /* Adjust this value based on the actual height of your navbar */
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .navbar-toggler {
+            border-color: #ffffff;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+
+        .navbar-nav .nav-link {
+            color: #ffffff;
+            font-size: 18px;
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}">Actiontype Statement</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('home') }}">
+                        <i class="fas fa-home"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Teacher Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Bootstrap JS en jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

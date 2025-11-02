@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>View Students</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/assets/css/vertical-light-layout/style.css">
+    <style>
+        .nav-link {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- partial:partials/_navbar.html -->
+<nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+    <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+        <a class="navbar-brand brand-logo" style="color: white" href="{{ url_for('teacher_dashboard') }}">DASHBOARD
+        </a>
+        <a class="navbar-brand brand-logo-mini" href="index.html"></a>
+        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="icon-menu"></span>
+        </button>
+    </div>
+    <div class="navbar-menu-wrapper d-flex align-items-center">
+        <h5 class="mb-0 font-weight-medium d-none d-lg-flex">Dashboard | Review System </h5>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                data-toggle="off-canvas">
+            <span class="icon-menu"></span>
+        </button>
+    </div>
+</nav>
+
+<!-- partial -->
+<div class="container-fluid page-body-wrapper">
+    <!-- partial:partials/_sidebar.html -->
+    <nav class="sidebar sidebar-off-canvas" id="sidebar">
+        <ul class="nav">
+            <li class="nav-item navbar-brand-mini-wrapper">
+                <a class="nav-link navbar-brand brand-logo-mini" href="index.html"><img
+                        src="" alt="logo"/></a>
+            </li>
+            <li class="nav-item nav-profile">
+                <a href="#" class="nav-link">
+                    <div class="text-wrapper">
+                    </div>
+                </a>
+            </li>
+            <li class="nav-item nav-category">
+                <span class="nav-link">Student</span>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('teacher_dashboard') }}">
+                    <span class="menu-title">Dashboard</span>
+                    <i class="fa fa-desktop"></i>
+                </a>
+            </li>
+            {% if current_user.is_admin %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('manage_teacher') }}">
+                        <span class="menu-title">Manage Teacher</span>
+                        <i class="fa fa-user-plus"></i>
+                    </a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('add_student') }}">
+                    <span class="menu-title">Add Student</span>
+                    <i class="fa fa-user-plus"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('student_answers') }}">
+                    <span class="menu-title">Student Answers</span>
+                    <i class="fa fa-address-book"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}">
+                    <span class="menu-title">Logout</span>
+                    <i class="fa fa-sign-out"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- partial -->
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="col-md-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Add New Student</h4>
+                            <form method="POST" action="{{ url_for('add_student') }}">
+                                <!-- Student Number -->
+                                <div class="form-group">
+                                    <label for="student_number">Student Number</label>
+                                    <input type="text" id="student_number" name="student_number"
+                                           class="form-control"
+                                           placeholder="Enter Student Number" required>
+                                </div>
+
+                                <!-- Student Name -->
+                                <div class="form-group">
+                                    <label for="student_name">Student Name</label>
+                                    <input type="text" id="student_name" name="student_name" class="form-control"
+                                           placeholder="Enter Student Name" required>
+                                </div>
+
+                                <!-- Student Class -->
+                                <div class="form-group">
+                                    <label for="student_class">Student Class</label>
+                                    <input type="text" id="student_class" name="student_class" class="form-control"
+                                           placeholder="Enter Student Class" required>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-dark">Add Student</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-sm-flex align-items-center mb-4">
+                                <h4 class="card-title mb-sm-0">All Students</h4>
+                            </div>
+                            <form id="search-form">
+                                <div class="row mb-3">
+                                    <div class="col-sm-4 mb-2">
+                                        <input type="text" class="form-control" placeholder="Search by Name"
+                                               id="search-name-input" name="search_name">
+                                    </div>
+                                    <div class="col-sm-4 mb-2">
+                                        <input type="text" class="form-control" placeholder="Search by Class"
+                                               id="search-class-input" name="search_class">
+                                    </div>
+                                    <div class="col-sm-3 mb-2">
+                                        <input type="text" class="form-control" placeholder="Search by Team"
+                                               id="search-team-input" name="search_team">
+                                    </div>
+                                    <div class="col-sm-1 mb-2">
+                                        <button type="submit" class="btn btn-dark btn-sm">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="table-responsive border rounded p-1">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th class="font-weight-bold">Student Number</th>
+                                        <th class="font-weight-bold">Student Name</th>
+                                        <th class="font-weight-bold">Class</th>
+                                        <th class="font-weight-bold">Questions Status</th>
+                                        <th class="font-weight-bold">Date Filled</th>
+                                        <th class="font-weight-bold">Action Type</th>
+                                        <th class="font-weight-bold">Team Name</th>
+                                        <th class="font-weight-bold">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for student in all_students %}
+                                        <tr>
+                                            <td>{{ student.student_number }}</td>
+                                            <td>{{ student.student_name }}</td>
+                                            <td>
+                                                <span id="student_class_{{ student.id }}">{{ student.student_class }}</span>
+                                                <input type="text" id="edit_student_class_{{ student.id }}"
+                                                       class="form-control d-none"
+                                                       value="{{ student.student_class }}">
+                                            </td>
+                                            <td>
+                                                {% if student.question_count == 0 %}
+                                                    <span class="badge badge-primary">Not Taken</span>
+                                                {% elif student.question_count == 20 %}
+                                                    <span class="badge badge-success">Completed</span>
+                                                {% else %}
+                                                    <span class="badge badge-info">Partial</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ latest_timestamps[student.student_number] }}</td>
+                                            <td>
+                                                {% if student.action_type == 'None' %}
+                                                    <span class="badge badge-danger">{{ student.action_type }}</span>
+                                                {% else %}
+                                                    <span class="badge badge-success">{{ student.action_type }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ student.team }}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-dark btn-sm edit-btn"
+                                                        data-student-number="{{ student.student_number }}">Update
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="6">No students found.</td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    </tbody>
+                                </table>
+                                <div id="edit-form" style="display: none;">
+                                    <h4>Edit Student</h4>
+                                    <form id="edit-student-form">
+                                        <input type="hidden" id="student-number">
+                                        <div class="form-group">
+                                            <label for="new-class">New Class</label>
+                                            <input type="text" class="form-control" id="new-class"
+                                                   placeholder="Enter new class">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="new-team">New Team</label>
+                                            <input type="text" class="form-control" id="new-team"
+                                                   placeholder="Enter new team">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        <button type="button" class="btn btn-secondary cancel-btn">Cancel</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- partial -->
+            <footer class="footer">
+                <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                    <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 Review System. All rights reserved. <a
+                            href="#"> Terms of use</a><a href="#">Privacy Policy</a></span>
+                </div>
+            </footer>
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+</div>
+
+<script>
+   // JavaScript om het klikken op de bewerkingsknop en het indienen van formulieren af te handelen
+    document.addEventListener('DOMContentLoaded', function () {
+        const editButtons = document.querySelectorAll('.edit-btn');
+        const editForm = document.getElementById('edit-form');
+        const studentNumberInput = document.getElementById('student-number');
+        const newClassInput = document.getElementById('new-class');
+        const newTeamInput = document.getElementById('new-team');
+        const editStudentForm = document.getElementById('edit-student-form');
+        const cancelBtn = document.querySelector('.cancel-btn');
+
+        editButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const studentNumber = button.getAttribute('data-student-number');
+                studentNumberInput.value = studentNumber;
+                editForm.style.display = 'block';
+                // Scroll naar het bewerkingsformulier
+                editForm.scrollIntoView({behavior: "smooth", block: "start"});
+            });
+        });
+
+        cancelBtn.addEventListener('click', function () {
+            editForm.style.display = 'none';
+        });
+
+        editStudentForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const studentNumber = studentNumberInput.value;
+            const newClass = newClassInput.value;
+            const newTeam = newTeamInput.value;
+
+            // Formuliergegevensobject maken
+            const formData = new FormData();
+            formData.append('student_class', newClass);
+            formData.append('team_name', newTeam);
+
+            fetch(`/edit_student/${studentNumber}`, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                   // Geef optioneel een succesbericht weer of laad de pagina opnieuw
+                    editForm.style.display = 'none';
+                    // Laad de pagina opnieuw om de wijzigingen weer te geven
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                   // Geef optioneel een foutmelding weer
+                });
+        });
+    });
+</script>
+
+<script>
+// JavaScript om de API-aanroep te activeren wanneer de pagina wordt geladen
+    document.addEventListener('DOMContentLoaded', function () {
+            // Stuur een HTTP POST-verzoek naar het update_action_types-eindpunt
+        fetch('/update_action_types', {
+            method: 'POST'
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+           // Geef optioneel een succesbericht weer of verwerk de antwoordgegevens
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Geef optioneel een foutmelding weer
+            });
+    });
+</script>
+<script>
+document.getElementById('search-form').addEventListener('submit', function (event) {
+    event.preventDefault();// Voorkom het indienen van formulieren
+
+    // Get input values
+    var nameInput = document.getElementById("search-name-input").value.toUpperCase();
+    var classInput = document.getElementById("search-class-input").value.toUpperCase();
+    var teamInput = document.getElementById("search-team-input").value.toUpperCase();
+
+  // Loop door rijen om te filteren op basis van invoerwaarden
+    var rows = document.querySelectorAll(".table tbody tr");
+
+   // Loop door rijen om te filteren op basis van invoerwaarden
+    rows.forEach(function (row) {
+        var nameCell = row.querySelector("td:nth-child(2)").textContent.toUpperCase();
+        var classCell = row.querySelector("td:nth-child(3)").textContent.toUpperCase();
+        var teamCell = row.querySelector("td:nth-child(7)").textContent.toUpperCase();
+
+      // Toon rij als een van de invoerwaarden overeenkomt of als alle invoerwaarden leeg zijn
+        if ((nameCell.includes(nameInput) || nameInput === "") &&
+            (classCell.includes(classInput) || classInput === "") &&
+            (teamCell.includes(teamInput) || teamInput === "")) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
+
+</script>
+
+</body>
+</html>

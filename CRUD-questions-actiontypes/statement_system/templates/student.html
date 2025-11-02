@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Student Login</title>
+    <!-- Bootstrap CSS -->
+    <link
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            rel="stylesheet"
+    />
+    <!-- Font Awesome -->
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <!-- Custom Styles -->
+    <style>
+  /* Dark Mode Styling */
+  body {
+    background-color: #121212; /* Dark background for the entire page */
+    color: #f0f0f0; /* Light text for contrast */
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Card Styles */
+  .card {
+    background-color: #1e1e1e; /* Dark background for the card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Darker shadow */
+    border-radius: 10px; /* Smooth rounded corners */
+    transition: box-shadow 0.3s ease-in-out;
+  }
+
+  .card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Larger shadow on hover */
+  }
+
+  .card-body {
+    padding: 1.5rem; /* Larger padding for comfort */
+    text-align: center; /* Centered text */
+  }
+
+  .input-group {
+    justify-content: center; /* Center the input group */
+  }
+
+  .form-control {
+    background-color: #2c2c2c; /* Darker input field background */
+    color: #f0f0f0; /* Light text */
+    border: 1px solid #444; /* Subtle border */
+    border-radius: 5px; /* Rounded corners */
+  }
+
+  .form-control::placeholder {
+    color: #a0a0a0; /* Gray placeholder text */
+  }
+
+  .btn-dark {
+    background-color: #333; /* Dark background for button */
+    border: 1px solid #555; /* Border for contrast */
+  }
+
+  .btn-dark:hover {
+    background-color: #444; /* Slightly lighter on hover */
+  }
+
+  footer {
+    flex: 1;
+    background-color: #1e1e1e;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+</style>
+</head>
+<body>
+<!-- Include the navbar (Assuming it has dark mode styling) -->
+<nav class="navbar navbar-dark" style="height: 70px; background-color: #0f1531;">
+    <a class="navbar-brand" href="#">Student Actiontype Statement System</a>
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            <a href="{{ url_for('home') }}" class="btn btn-outline-light">
+                <i class="fas fa-home"></i>
+                Back to Home
+            </a>
+        </li>
+    </ul>
+</nav>
+<section>
+    <div class="container d-flex justify-content-center align-items-center" style="height: 50vh;">
+        <div class="card" style="width: 500px;">
+            <div class="card-body">
+                <h3 class="card-title">Student Login</h3>
+                <p class="card-text">{{ "Please enter your student ID to continue." if not error else error }}</p>
+                <form method="POST" action="{{ url_for('student') }}">
+                    <div class="input-group">
+                        <input type="text" name="student_number" class="form-control" placeholder="Enter Student Number" aria-label="Student Number">
+                    </div>
+                    <!-- Submit button in de form -->
+                    <div class="mt-3">
+                        <button class="btn btn-dark btn-block" type="submit">Take Test</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Footer, specifiek zo gezet sinds het soepeler gaat met de code -->
+<footer>
+    <div class="container">
+        <p>&copy; 2024 Student Statement Actiontypes. All Rights reserved by Soufiane Tarifit - 1080302.</p>
+    </div>
+</footer>
+<!-- Bootstrap JS en jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

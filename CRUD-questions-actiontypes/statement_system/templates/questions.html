@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Actiontype Statement System</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
+    <style>
+        /* Dark Mode Styling */
+        body {
+            background-color: #121212; /*  dark background voor de  body */
+            color: #f0f0f0; /* Light text voor contrast */
+            margin: 0;
+            padding: 0;
+        }
+
+        .card {
+            background-color: #1e1e1e; /* Darker card background */
+            color: #f0f0f0; /* Light text */
+            border: 1px solid #444; /* Subtle border */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Darker shadow */
+            border-radius: 10px; /* Smooth edges */
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Enhanced shadow on hover */
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .answer-box {
+            border: 1px solid #444; /* Darker border for answer boxes */
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s, border-color 0.3s;
+            background-color: #2c2c2c; /* Slightly lighter than the card */
+        }
+
+        .answer-box:hover {
+            background-color: #3b3b3b; /* Slightly lighter on hover */
+            border-color: #1e90ff; /* Blue border on hover */
+        }
+
+        .answer-box.selected {
+            background-color: #1e90ff; /* Blue background when selected */
+            color: #fff; /* White text when selected */
+            border-color: #1e90ff;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            padding-top: 50px; /* aanpassing van container padding */
+        }
+
+        footer {
+            flex: 1;
+            background-color: #1e1e1e;
+            color: white;
+            text-align: center;
+            padding: -10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-dark" style="height: 70px; background-color: #0f1531;">
+    <a class="navbar-brand" href="#">Student Actiontype Statement System</a>
+    <ul class="nav justify-content-end">
+        <li class="nav-item">
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-light">
+                <i class="fas fa-home"></i> Exit
+            </a>
+        </li>
+    </ul>
+</nav>
+<section class="card-container">
+    <!-- Centered Container -->
+    <div class="container d-flex justify-content-center align-items-center">
+        <!-- Vertical Card -->
+        <div class="card" style="width: 900px;">
+            <div class="card-body">
+                <!-- Card Title -->
+                <h5 class="card-title">Student ID: {{ current_user.student_number }}</h5>
+                <h5 class="card-title">Student Name: {{ current_user.student_name }}</h5>
+                <h5 class="card-title">Student Class: {{ current_user.student_class }}</h5>
+                <h3 class="card-title text-center" id="question-number">Statement No: </h3>
+                <div class="question">
+                    Choose any one from the following:
+                </div>
+                <div id="statement-container">
+                    <!-- Statements will be populated here by JavaScript -->
+                </div>
+                <button id="submit-button" class="btn btn-danger mt-3">Next</button>
+                <div id="completion-message" style="display: none;">
+                    <p>Thank you for submitting your responses. Contact your teacher to know about your Action Type.
+                        Please return back to the home screen.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        const studentNumber = {{ student_number }};
+        let currentStatementNumber = 0;
+        let totalStatements = 0; // Initialiseer het totale aantal statements
+
+        // Functie om de volgende instructie te laden
+        function loadNextStatement() {
+            $.get(`/api/student/${studentNumber}/statement`, function (data) {
+                if (data.error) {
+                    handleError(data.error);
+                } else {
+                    renderStatement(data);
+                    if (currentStatementNumber >= data.total_statements) {
+                        showCompletionMessage()
+                    }
+                }
+            });
+        }
+
+            function showCompletionMessage() {
+                $('#statement-container').hide();
+                $('#submit-button').hide();
+                $('#question-number').hide();
+
+                // Bedankt-bericht weergeven
+                $('#completion-message').html('<h1 class="text-center">Thank You !</h1>').show();
+
+                // Haal antwoorden op uit de database
+                $.get(`/api/student/${studentNumber}/answers`, function (data) {
+                    if (data.error) {
+                        console.error('Error retrieving answers:', data.error);
+                    } else {
+                        // Formateert en toont antwoorden op
+                        const answers = data.answers;
+                        let answerHTML = '<table class="table table-bordered" style="color: white; font-size: 14px;"><thead><tr style="background-color: #343a40; color: white;"><th style="padding: 10px;">Question:</th>';
+                        let answerRow = '<tr><td style="padding: 10px;">Answer:</td>';
+
+                        // Loop door de antwoorden en voeg ze toe aan HTML
+                        answers.forEach(answer => {
+                            answerHTML += `<th>${answer.question_number}</th>`;
+                            answerRow += `<td>${answer.answer_result}</td>`;
+                        });
+
+                        // Sluit tabelrijen en toon deze
+                        answerHTML += '</tr></thead><tbody>' + answerRow + '</tr></tbody></table>';
+                        $('#completion-message').append(answerHTML);
+                    }
+                });
+            }
+
+            // Functie om de verklaring weer te geven
+            function renderStatement(data) {
+                currentStatementNumber = data.statement_number;
+                const choices = data.statement_choices;
+
+                const statementHTML = `
+            <div class="form-check">
+                <input type="radio" name="statement_choice" value="${choices[0].choice_number}" class="form-check-input">
+                <label class="form-check-label">${choices[0].choice_text}</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" name="statement_choice" value="${choices[1].choice_number}" class="form-check-input">
+                <label class="form-check-label">${choices[1].choice_text}</label>
+            </div>
+        `;
+
+                $('#statement-container').html(statementHTML);
+                $('#submit-button').prop('disabled', false);
+
+                // Update het totale aantal stellingen en het huidige vraagnummer
+                totalStatements = data.total_statements;
+                const currentQuestionIndex = Math.ceil(currentStatementNumber / 2); // Bereken de huidige vraagindex
+                const totalQuestions = Math.ceil(totalStatements / 2); // Bereken het totale aantal vragen
+                $('#question-number').text(`${currentQuestionIndex}/${totalQuestions}`); // Update vraagnummerweergave
+            }
+
+            // Functie om fouten af te handelen
+            function handleError(error) {
+                if (error === 'No more statements') {
+                    showCompletionMessage();
+                } else {
+                    // Foutmelding weergeven
+                    $('#statement-container').html(`<p>${error}</p>`);
+                    $('#submit-button').prop('disabled', true);
+                }
+            }
+
+            // Functie om het antwoord in te dienen
+            function submitAnswer() {
+                const selectedChoice = $('input[name="statement_choice"]:checked').val();
+
+                if (selectedChoice) {
+                    const group_id = Math.ceil(currentStatementNumber / 2); // Berekent group_id(statements)
+                    $.ajax({
+                        url: `/api/student/${studentNumber}/statement/${currentStatementNumber}/group/${group_id}`,
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({statement_choice: selectedChoice}),
+                        success: function (response) {
+                            loadNextStatement();
+                        },
+                        error: function (err) {
+                            console.error('Error submitting answer:', err);
+                        }
+                    });
+                } else {
+                    // Waarschuwing weergeven als er geen keuze is geselecteerd
+                    alert('Please select an answer before proceeding.');
+                }
+            }
+
+            $('#submit-button').click(submitAnswer);
+
+            // Laad de eerste instructie wanneer de pagina wordt geladen
+            loadNextStatement();
+        }
+    )
+
+
+</script>
+
+
+</body>
+</html>
+
