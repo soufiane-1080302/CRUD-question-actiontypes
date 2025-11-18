@@ -1,11 +1,13 @@
 # CRUD-question-actiontypes
 
-HOE START JE DE WEBAPPLICATIE OP?
+**HOE START JE DE WEBAPPLICATIE OP?**
 
 1. Ga naar 'REQUIREMENTS.txt' toe
 2. Terwijl je in het bestand zit klik je op de terminal
 3. Type dan in pip install Flask
 4. Klik op 'main.py' en klik op 'run main'
+
+
 
    
 **Bronvermelding: Deze repository bevat de volgende bestanden:**
